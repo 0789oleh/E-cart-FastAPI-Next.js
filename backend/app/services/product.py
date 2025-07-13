@@ -8,13 +8,35 @@ class ProductService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_product(self, product_id: int) -> Optional[Product]:
-        db_product = self.db.query(ProductDB).filter(ProductDB.id == product_id).first()
-        return Product.model_validate(db_product) if db_product else None
+    async def list_products(self, skip: int = 0, limit: int = 10, name: str = None, sort: str = "name"):
+        cache_key = f"products:list:skip={skip}:limit={limit}:name={name}:sort={sort}"
+        async for cache in get_cache():
+            cached = await cache.get(cache_key)
+            if cached:
+                return Product.parse_raw(cached)  # Предполагается, что данные в Pydantic-формате
 
-    def get_products(self, skip: int = 0, limit: int = 100) -> List[Product]:
-        db_products = self.db.query(ProductDB).offset(skip).limit(limit).all()
-        return [Product.model_validate(p) for p in db_products]
+        # Если кэш пуст, запрос к базе
+        query = self.db.execute("SELECT * FROM products LIMIT :limit OFFSET :skip", {"limit": limit, "skip": skip})
+        products = [Product(**row) for row in (await query).fetchall()]
+        async for cache in get_cache():
+            await cache.set(cache_key, products.json(), expire=3600)  # Кэшируем на 1 час
+        return products
+
+    async def get_product(self, product_id: int) -> Product:
+        cache_key = f"product:{product_id}"
+        async for cache in get_cache():
+            cached = await cache.get(cache_key)
+            if cached:
+                return Product.parse_raw(cached)
+
+        query = await self.db.execute("SELECT * FROM products WHERE id = :id", {"id": product_id})
+        product = query.fetchone()
+        if not product:
+            raise ValueError("Product not found")
+        product_obj = Product(**product)
+        async for cache in get_cache():
+            await cache.set(cache_key, product_obj.json(), expire=3600)
+        return product_obj
 
     def create_product(self, product: ProductCreate) -> Product:
         db_product = ProductDB(**product.model_dump())
@@ -44,14 +66,3 @@ class ProductService:
         db_product.is_active = False  # Мягкое удаление
         self.db.commit()
         return True
-
-    # Redis is needed
-    def get_products_cached(self) -> List[Product]:
-        cache_key = "all_products"
-        cached = redis.get(cache_key)
-        if cached:
-            return json.loads(cached)
-        
-        products = self.get_products()
-        redis.setex(cache_key, 3600, json.dumps([p.dict() for p in products]))
-        return products
