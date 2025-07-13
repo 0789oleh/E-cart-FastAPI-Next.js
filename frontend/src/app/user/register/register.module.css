@@ -1,0 +1,46 @@
+/* Стили аналогичны Login.module.css */
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  
+  .input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .submitButton {
+    padding: 10px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .submitButton:hover {
+    background-color: #005bb5;
+  }
+  
+  .error {
+    color: red;
+  }
+  
+  .link {
+    margin-top: 15px;
+  }

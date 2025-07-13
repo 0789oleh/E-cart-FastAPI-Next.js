@@ -1,0 +1,119 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .cart {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .itemList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .item {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .details {
+    flex: 1;
+  }
+  
+  .itemName {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .itemPrice {
+    color: #0070f3;
+    font-weight: bold;
+  }
+  
+  .quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .quantityButton {
+    padding: 5px 10px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .quantityButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .quantityButton:hover:not(:disabled) {
+    background-color: #005bb5;
+  }
+  
+  .itemTotal {
+    font-weight: bold;
+  }
+  
+  .removeButton {
+    padding: 5px 10px;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .removeButton:hover {
+    background-color: #cc0000;
+  }
+  
+  .summary {
+    text-align: right;
+  }
+  
+  .checkoutButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0070f3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .checkoutButton:hover {
+    background-color: #005bb5;
+  }
+  
+  .empty {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  
+  .backLink {
+    display: inline-block;
+    margin-top: 20px;
+    color: #0070f3;
+    text-decoration: none;
+  }
+  
+  .backLink:hover {
+    text-decoration: underline;
+  }
