@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getSession } from "@/lib/auth"; // Хелпер для проверки сессии
-import { fetchCart, updateCart, removeFromCart } from "@/lib/api"; // API-функции для корзины
+import { fetchCart, addToCart, removeFromCart } from "@/lib/api"; // API-функции для корзины
 import styles from "./Cart.module.css";
 
 interface CartItem {
@@ -76,7 +76,7 @@ export default function CartPage() {
 
     if (session) {
       // Синхронизация с бэкендом
-      await updateCart(session.userId, productId, quantity);
+      await addToCart(session.userId, productId, quantity);
     } else {
       // Обновление в localStorage
       localStorage.setItem("cart", JSON.stringify(updatedItems));

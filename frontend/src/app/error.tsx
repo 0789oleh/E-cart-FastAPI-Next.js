@@ -36,7 +36,7 @@ export default function Error({ error, reset }: ErrorProps) {
     <div className={`${styles.container} ${isDarkMode ? styles.dark : ""}`}>
       <h1 className={styles.title}>Ой, что-то пошло не так!</h1>
       <p className={styles.message}>
-        Произошла ошибка: {error.message || "Unexpected error"}
+        Произошла ошибка: {error.message || "Unexpected "}
       </p>
       {process.env.NODE_ENV === "development" && (
         <p className={styles.stack}>Стек вызовов: {error.stack}</p>

@@ -34,7 +34,7 @@ export async function fetchCart(userId: string) {
   return data.cartItems || [];
 }
 
-export async function updateCart(userId: string, productId: string, quantity: number) {
+export async function addToCart(userId: string, productId: string, quantity: number) {
   await fetch(`/api/cart/${userId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
