@@ -1,7 +1,7 @@
 // app/user/profile/page.tsx
 import { redirect } from 'next/navigation';
-import { getSession } from '../../lib/auth'; // Предполагаемый хелпер для проверки сессии
-import { fetchUserData } from '../../lib/api'; // Функция для получения данных пользователя
+import { getSession } from '../../../lib/auth'; // Предполагаемый хелпер для проверки сессии
+import { fetchUserData } from '../../../lib/api'; // Функция для получения данных пользователя
 import Link from 'next/link';
 import styles from './Profile.module.css'; // Стили (если используешь CSS Modules)
 
