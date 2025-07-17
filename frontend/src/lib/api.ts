@@ -6,14 +6,20 @@ export async function fetchUserData(userId: string) {
   return data;
 }
 
-export async function fetchProducts() {
-  const res = await fetch("/api/products", {
-    headers: { "Content-Type": "application/json" },
-  });
-  const data = await res.json();
-  return data.products || [];
+// src/lib/api.ts или в products/page.tsx
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image?: string;
 }
 
+export async function fetchProducts() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  const res = await fetch(`${baseUrl}/api/products`);
+  if (!res.ok) throw new Error('Failed to fetch products: ' + res.statusText);
+  return (await res.json()) as Product[];
+}
 // lib/api.ts
 export async function fetchProductById(id: string) {
   const res = await fetch(`/api/products/${id}`, {

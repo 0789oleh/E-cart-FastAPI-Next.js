@@ -1,19 +1,20 @@
 // app/user/profile/page.tsx
 import { redirect } from 'next/navigation';
-import { getSession } from '../../../lib/auth'; // Предполагаемый хелпер для проверки сессии
-import { fetchUserData } from '../../../lib/api'; // Функция для получения данных пользователя
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';// Предполагаемый хелпер для проверки сессии
+import { fetchUserData } from '@/lib/api'; // Функция для получения данных пользователя
 import Link from 'next/link';
 import styles from './Profile.module.css'; // Стили (если используешь CSS Modules)
 
 export default async function ProfilePage() {
   // Проверка авторизации
-  const session = await getSession();
+  const session = await getServerSession(authOptions);
   if (!session) {
     redirect('/user/login'); // Редирект на страницу логина, если пользователь не авторизован
   }
 
   // Получение данных пользователя с бэкенда
-  const user = await fetchUserData(session.userId);
+  const user = await fetchUserData(session.user?.email || '');
 
   return (
     <div className={styles.container}>

@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getSession } from "@/lib/auth"; // Хелпер для проверки сессии
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';// Предполагаемый хелпер для проверки сессии
 import { fetchCart, addToCart, removeFromCart } from "@/lib/api"; // API-функции для корзины
 import styles from "./Cart.module.css";
 
@@ -25,7 +26,7 @@ export default function CartPage() {
     const loadCart = async () => {
       setLoading(true);
       try {
-        const session = await getSession();
+        const session = await getServerSession(authOptions);
         let items: CartItem[] = [];
 
         if (session) {
@@ -50,10 +51,10 @@ export default function CartPage() {
 
   const handleAddItem = async (productId: string, quantity: number = 1) => {
     try {
-      const session = await getSession();
+      const session = await getServerSession(authOptions);
       if (session) {
-        const newItem = await addToCart(session.userId, productId, quantity);
-        setCartItems((prevItems) => [...prevItems, newItem]); // Обновляем состояние
+        await addToCart(session.userId, productId, quantity);
+        setCartItems((prevItems) => [...prevItems, { productId, quantity, price: 0, name: "New Item", image: "/placeholder.jpg" }]); // Обновляем состояние
       } else {
         const updatedItems = [...cartItems, { productId, quantity, price: 0, name: "New Item", image: "/placeholder.jpg" }];
         localStorage.setItem("cart", JSON.stringify(updatedItems));
@@ -67,7 +68,7 @@ export default function CartPage() {
   // Обновление количества товара
   const handleUpdateQuantity = async (productId: string, quantity: number) => {
     if (quantity < 1) return;
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     const updatedItems = cartItems.map((item) =>
       item.productId === productId ? { ...item, quantity } : item
@@ -85,7 +86,7 @@ export default function CartPage() {
 
   // Удаление товара из корзины
   const handleRemoveItem = async (productId: string) => {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
     const updatedItems = cartItems.filter((item) => item.productId !== productId);
     setCartItems(updatedItems);
 

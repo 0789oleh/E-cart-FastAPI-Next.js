@@ -1,10 +1,9 @@
-// app/products/page.tsx
 import Link from "next/link";
-import { fetchProducts } from "@/lib/api"; // Функция для получения списка продуктов
+import { fetchProducts } from "@/lib/api";
 import styles from "./Products.module.css";
+import { Product } from "@/lib/api"; // Импортируй интерфейс
 
 export default async function ProductsPage() {
-  // Получение списка продуктов с бэкенда
   const products = await fetchProducts();
 
   return (
@@ -12,7 +11,7 @@ export default async function ProductsPage() {
       <h1>Каталог товаров</h1>
       <div className={styles.grid}>
         {products.length > 0 ? (
-          products.map((product: any) => (
+          products.map((product: Product) => (
             <div key={product.id} className={styles.card}>
               <Link href={`/products/${product.id}`}>
                 <img
@@ -25,7 +24,6 @@ export default async function ProductsPage() {
               </Link>
               <button
                 onClick={() => {
-                  // Логика добавления в корзину (например, через глобальное состояние или API)
                   console.log(`Добавлен в корзину: ${product.name}`);
                 }}
                 className={styles.addButton}
