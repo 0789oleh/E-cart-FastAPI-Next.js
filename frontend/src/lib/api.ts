@@ -55,3 +55,23 @@ export async function removeFromCart(userId: string, productId: string) {
     body: JSON.stringify({ productId }),
   });
 }
+
+export async function addProduct(product: Omit<Product, "id">) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/products`, {
+    method: "POST",
+    body: JSON.stringify(product),
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to add product");
+  return res.json();
+}
+
+export async function deleteProduct(id: number) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/products/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Failed to delete product");
+  return res.ok;
+}

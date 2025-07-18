@@ -1,8 +1,9 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, APIRouter
+from sqlalchemy.orm import Session
 from typing import List
 from app.dependencies import get_async_db, get_current_user
-from app.models.user import UserDB
-from app.schemas.product import Product, ProductCreate, ProductUpdate
+from app.schemas.user import UserDB
+from app.models.product import Product, ProductCreate, ProductUpdate
 from app.services.product import ProductService
 from app.core.config import settings
 

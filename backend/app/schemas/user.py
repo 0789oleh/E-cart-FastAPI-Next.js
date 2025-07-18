@@ -2,6 +2,9 @@ from sqlalchemy import Column, ForeignKey, Integer, Float, String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base import Base
 import uuid
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserDB(Base):
     __tablename__ = "users"

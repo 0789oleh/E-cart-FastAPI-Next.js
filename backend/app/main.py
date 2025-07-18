@@ -1,7 +1,7 @@
 # backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api import products, users, orders
+from app.routes import products, users, orders
 
 app = FastAPI()
 

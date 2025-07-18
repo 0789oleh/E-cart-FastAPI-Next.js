@@ -1,10 +1,11 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 import jwt
 from app.dependencies import get_async_db, get_current_user
-from app.models.user import UserDB
-from app.schemas.user import UserCreate, UserUpdate, UserResponse
+from app.schemas.user import UserDB
+from app.models.user import UserCreate, UserUpdate, UserResponse
 from app.services.user import UserService
 from app.core.config import settings
 

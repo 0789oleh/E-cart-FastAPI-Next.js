@@ -1,5 +1,6 @@
 # app/routers/cart.py
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, APIRouter
+from sqlalchemy.orm import Session
 from app.dependencies import get_async_db, get_current_user
 from app.models.user import UserDB
 from app.schemas.cart import CartResponse, CartItemCreate

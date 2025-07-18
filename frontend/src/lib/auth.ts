@@ -1,7 +1,28 @@
-import NextAuth from 'next-auth/react';
+// lib/auth.ts
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
-export async function getSession() {
-    // Пример: получение сессии из cookies или контекста
-    const session = await NextAuth.getSession(); 
-    return session || null;
-  }
+export const authOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }: { token: any; user?: any }) {
+      if (user) {
+        token.userId = user.id; // Добавь userId в токен
+      }
+      return token;
+    },
+    async session({ session, token }: { session: any; token: any }) {
+      if (session.user) {
+        session.userId = token.userId as string; // Добавь userId в сессию
+      }
+      return session;
+    },
+  },
+};
+
+export default NextAuth(authOptions);

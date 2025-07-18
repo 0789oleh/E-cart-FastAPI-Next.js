@@ -36,7 +36,14 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request, { params }: { params: { productId: string } }) {
   // Проверка авторизации (например, только админ)
   const session = await getServerSession();
-  if (!session || !session.user || !session.user.isAdmin) {
+  type SessionUser = {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    isAdmin?: boolean;
+  };
+  const user = session?.user as SessionUser | undefined;
+  if (!session || !user || !user.isAdmin) {
     return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
   }
 
