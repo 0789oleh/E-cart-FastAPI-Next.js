@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';// Предполагаемый хелпер для проверки сессии
-import { fetchCart, addToCart, removeFromCart } from "@/lib/api"; // API-функции для корзины
+import { fetchProduct, fetchCart, addToCart, removeFromCart } from "@/lib/api"; // API-функции для корзины
 import styles from "./Cart.module.css";
 
 interface CartItem {
@@ -31,7 +31,7 @@ export default function CartPage() {
 
         if (session) {
           // Если пользователь авторизован, загружаем корзину с бэкенда
-          items = await fetchCart(session.userId);
+          const cart = await fetchCart(session.user?.id) 
         } else {
           // Для гостей: загружаем из localStorage
           const localCart = localStorage.getItem("cart");
@@ -50,20 +50,42 @@ export default function CartPage() {
   }, []);
 
   const handleAddItem = async (productId: string, quantity: number = 1) => {
-    try {
-      const session = await getServerSession(authOptions);
-      if (session) {
-        await addToCart(session.userId, productId, quantity);
-        setCartItems((prevItems) => [...prevItems, { productId, quantity, price: 0, name: "New Item", image: "/placeholder.jpg" }]); // Обновляем состояние
-      } else {
-        const updatedItems = [...cartItems, { productId, quantity, price: 0, name: "New Item", image: "/placeholder.jpg" }];
-        localStorage.setItem("cart", JSON.stringify(updatedItems));
-        setCartItems(updatedItems);
-      }
-    } catch (error) {
-      console.error("Ошибка добавления товара:", error);
+  try {
+    const session = await getServerSession(authOptions);
+    if (session) {
+      const cartId = (await fetchCart(session.user?.id)).id; // Получи из бэкенда или состояния (например, fetchCart)
+      const product = await fetchProduct(productId); // Предполагаемая функция для получения продукта
+      const newCartItem = {
+        cart_id: cartId,
+        product_id: parseInt(productId),
+        price_per_unit: product.price || 0,
+        quantity,
+      };
+      const addedItemRaw = await addToCart(newCartItem); // Добавляем товар в корзину на бэкенде
+      const addedItem: CartItem = {
+        productId: String(addedItemRaw.product_id ?? productId),
+        name: product.name ?? "",
+        price: addedItemRaw.price_per_unit ?? product.price ?? 0,
+        image: product.image_url ?? "",
+        quantity: addedItemRaw.quantity ?? quantity,
+      };
+      setCartItems((prevItems) => [...prevItems, addedItem]); // Обновляем с данными от бэкенда
+    } else { 
+      const newItem: CartItem = {
+        productId: productId,
+        name: "", // Можно добавить логику для получения имени
+        price: 0, // Замени на реальную цену, если доступна
+        image: "", // Можно добавить логику для получения изображения
+        quantity,
+      };
+      const updatedItems = [...cartItems, newItem];
+      localStorage.setItem("cart", JSON.stringify(updatedItems));
+      setCartItems(updatedItems);
     }
-  };
+  } catch (error) {
+    console.error("Ошибка добавления товара:", error);
+  }
+};
 
   // Обновление количества товара
   const handleUpdateQuantity = async (productId: string, quantity: number) => {
@@ -77,7 +99,15 @@ export default function CartPage() {
 
     if (session) {
       // Синхронизация с бэкендом
-      await addToCart(session.userId, productId, quantity);
+      const cartId = (await fetchCart(session.user?.id)).id;
+      const product = await fetchProduct(productId);
+      const updatedCartItem = {
+        cart_id: cartId,
+        product_id: parseInt(productId),
+        price_per_unit: product.price || 0,
+        quantity,
+      };
+      await addToCart(updatedCartItem);
     } else {
       // Обновление в localStorage
       localStorage.setItem("cart", JSON.stringify(updatedItems));
