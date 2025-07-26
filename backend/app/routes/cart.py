@@ -7,7 +7,7 @@ from app.schemas.cart import CartResponse, CartItemCreate
 from app.services.cart import CartService
 from app.core.config import settings
 
-router = APIRouter(tags=["cart"], prefix="/cart")
+router = APIRouter(tags=["cart"])
 
 @router.get("", response_model=CartResponse)
 async def get_cart(

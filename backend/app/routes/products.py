@@ -7,7 +7,7 @@ from app.models.product import Product, ProductCreate, ProductUpdate
 from app.services.product import ProductService
 from app.core.config import settings
 
-router = APIRouter(tags=["products"], prefix="/products")
+router = APIRouter(tags=["products"])
 
 @router.get("", response_model=List[Product])
 async def list_products(

@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.schemas.product import ProductDB
 from app.models.product import Product, ProductCreate, ProductUpdate
 from typing import List, Optional
+from app.core.cache import get_cache
 
 
 class ProductService:

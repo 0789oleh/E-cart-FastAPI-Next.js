@@ -1,5 +1,6 @@
 # app/core/cache.py
-import aioredis
+import redis.asyncio as redis
+from fastapi import Depends
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from typing import Optional, Any
@@ -9,6 +10,9 @@ class RedisCache:
 
     def __init__(self):
         self.redis = None
+
+    redis_pool = redis.from_url("redis://redis:6379", \
+                                encoding="utf-8", decode_responses=True)
 
     @classmethod
     @asynccontextmanager
@@ -20,7 +24,7 @@ class RedisCache:
         await cls._instance.disconnect()
 
     async def connect(self):
-        self.redis = await aioredis.create_redis_pool(settings.REDIS_URL)
+        self.redis = await redis.create_redis_pool(settings.REDIS_URL)
 
     async def disconnect(self):
         if self.redis:
@@ -41,6 +45,10 @@ class RedisCache:
         await self.redis.delete(key)
 
 # Пример использования (для сервисов)
+@asynccontextmanager
 async def get_cache():
-    async with RedisCache.get_instance() as cache:
+    async with redis_pool as cache:
         yield cache
+
+def get_redis_cache():
+    return get_cache()

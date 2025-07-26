@@ -7,7 +7,7 @@ from app.models.order import OrderCreate, OrderResponse, OrderStatus
 from app.services.order import OrderService
 from app.core.config import settings
 
-router = APIRouter(tags=["orders"], prefix="/orders")
+router = APIRouter(tags=["orders"])
 
 @router.post("/", response_model=OrderResponse, status_code=201)
 async def create_order(

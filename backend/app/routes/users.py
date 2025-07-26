@@ -9,7 +9,7 @@ from app.models.user import UserCreate, UserUpdate, UserResponse
 from app.services.user import UserService
 from app.core.config import settings
 
-router = APIRouter(tags=["users"], prefix="/users")
+router = APIRouter(tags=["users"])
 
 @router.post("/register", response_model=UserResponse, status_code=201)
 async def register(user: UserCreate, db: Session = Depends(get_async_db)):

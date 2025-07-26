@@ -13,9 +13,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(products.router, prefix="/products", tags=["products"])
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(orders.router, prefix="/orders", tags=["orders"])
+app.include_router(products.router, prefix="/api/products", tags=["products"])
+app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 
 @app.get("/")
 def read_root():
