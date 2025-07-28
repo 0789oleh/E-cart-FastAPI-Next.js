@@ -1,5 +1,5 @@
 # frontend/Dockerfile
-FROM node:18
+FROM node:25-slim
 
 WORKDIR /app
 
@@ -11,6 +11,5 @@ COPY . .
 RUN npm run build
 
 ENV NODE_ENV=production
-ENV PORT=$PORT
 
 CMD ["npm", "run", "start"]
