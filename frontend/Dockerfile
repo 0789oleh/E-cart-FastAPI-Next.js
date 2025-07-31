@@ -1,14 +1,12 @@
 # frontend/Dockerfile
-FROM node:22-slim
+FROM node:22-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm update && npm audit fix --force && npm install
+RUN npm install
 
 COPY . .
-
-RUN npm run build
 
 ENV NODE_ENV=production
 
