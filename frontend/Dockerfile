@@ -1,10 +1,10 @@
 # frontend/Dockerfile
-FROM node:25-slim
+FROM node:22-slim
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm update && npm audit fix --force && npm install
 
 COPY . .
 

@@ -16,6 +16,6 @@ cd ./E-cart-FatAPI-Next.js
 3. Run 
 
 ```bash
-docker-compose --build up
+docker compose  up  --build
 ```
 
