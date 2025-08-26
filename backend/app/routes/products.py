@@ -5,9 +5,9 @@ from app.dependencies import get_async_db, get_current_user
 from app.schemas.user import UserDB
 from app.models.product import Product, ProductCreate, ProductUpdate
 from app.services.product import ProductService
-from app.core.config import settings
 
 router = APIRouter(tags=["products"])
+
 
 @router.get("", response_model=List[Product])
 async def list_products(
@@ -18,7 +18,9 @@ async def list_products(
     sort: str = "name"
 ):
     """Получение списка продуктов с пагинацией и фильтрацией."""
-    return ProductService(db).list_products(skip=skip, limit=limit, name=name, sort=sort)
+    return await ProductService(db).list_products(skip=skip, limit=limit,
+                                                  name=name, sort=sort)
+
 
 @router.get("/{product_id}", response_model=Product)
 async def read_product(product_id: int, db: Session = Depends(get_async_db)):
@@ -27,6 +29,7 @@ async def read_product(product_id: int, db: Session = Depends(get_async_db)):
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
+
 
 @router.post("/", response_model=Product, status_code=201)
 async def create_product(
@@ -38,6 +41,7 @@ async def create_product(
     if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Admin access required")
     return ProductService(db).create_product(product)
+
 
 @router.patch("/{product_id}", response_model=Product)
 async def update_product(
@@ -53,6 +57,7 @@ async def update_product(
     if not updated_product:
         raise HTTPException(status_code=404, detail="Product not found")
     return updated_product
+
 
 @router.delete("/{product_id}")
 async def delete_product(

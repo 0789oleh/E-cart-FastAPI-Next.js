@@ -14,7 +14,7 @@ class ProductService:
         async for cache in get_cache():
             cached = await cache.get(cache_key)
             if cached:
-                return Product.parse_raw(cached)  # Предполагается, что данные в Pydantic-формате
+                return Product.model_validate(cached)  # Предполагается, что данные в Pydantic-формате
 
         # Если кэш пуст, запрос к базе
         query = self.db.execute("SELECT * FROM products LIMIT :limit OFFSET :skip", {"limit": limit, "skip": skip})

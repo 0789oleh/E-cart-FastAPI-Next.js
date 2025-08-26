@@ -1,3 +1,5 @@
 /venv
 .env
 /app/__pycache__
+/migrations
+/app/*/__pycache__

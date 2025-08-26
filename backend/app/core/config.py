@@ -1,6 +1,14 @@
+import os
 from pydantic import PostgresDsn, validator
 from pydantic_settings import BaseSettings
 from typing import Optional
+from dotenv import load_dotenv
+
+load_dotenv()  # Загружает переменные из .env
+
+DATABASE_URL = os.getenv("DATABASE_URL",
+                         "postgresql://user:password@postgres:5432/dbname")
+
 
 class Settings(BaseSettings):
     # База данных

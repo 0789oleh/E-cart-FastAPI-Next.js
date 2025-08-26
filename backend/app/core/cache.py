@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from typing import Optional, Any
 
+
 class RedisCache:
     _instance = None
 
@@ -44,11 +45,13 @@ class RedisCache:
         """Удалить ключ из кэша."""
         await self.redis.delete(key)
 
+
 # Пример использования (для сервисов)
 @asynccontextmanager
 async def get_cache():
     async with redis_pool as cache:
         yield cache
+
 
 def get_redis_cache():
     return get_cache()

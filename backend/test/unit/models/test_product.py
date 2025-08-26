@@ -1,6 +1,7 @@
 import pytest
 from app.models.product import ProductCreate, ProductUpdate
 
+
 def test_product_create_validation():
     # Корректные данные
     product = ProductCreate(
